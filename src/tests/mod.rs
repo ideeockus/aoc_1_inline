@@ -1,7 +1,6 @@
 use crate::recover_calibration_data;
-use rand::prelude::*;
 use crate::NUM_STR_PAIRS;
-
+use rand::prelude::*;
 
 const LOW_CASE_ALPHANUMERIC_CHARSET: &str = "abcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -14,25 +13,21 @@ impl Distribution<char> for LowCaseAlphanumeric {
     }
 }
 
-
 fn gen_rand_str_with_len(rng: &mut StdRng, str_len: usize) -> String {
-    rng
-            .sample_iter(&LowCaseAlphanumeric)
-            .take(str_len)
-            .map(char::from)
-            .collect()
+    rng.sample_iter(&LowCaseAlphanumeric)
+        .take(str_len)
+        .map(char::from)
+        .collect()
 }
 
 #[derive(Debug)]
 struct TestData {
-    line: String,  // line with coded calibration_value
-    calibration_value: u128,  
+    line: String, // line with coded calibration_value
+    calibration_value: u128,
 }
 
 impl TestData {
-    fn gen_with_rng(
-        rng: &mut StdRng,
-    ) -> Self {
+    fn gen_with_rng(rng: &mut StdRng) -> Self {
         let (start_num_str, start_num) = *NUM_STR_PAIRS
             .choose(rng)
             .expect("cannot choose elem from NUM_STR_PAIRS");
@@ -70,7 +65,7 @@ struct TestDataGenerator {
 impl TestDataGenerator {
     fn new(seed: u64) -> Self {
         Self {
-            rng: StdRng::seed_from_u64(seed)
+            rng: StdRng::seed_from_u64(seed),
         }
     }
 }
@@ -90,16 +85,12 @@ impl Iterator for TestDataGenerator {
 #[test]
 fn test_recover_calibration_data() {
     let test_seed = 123;
-    let test_data_iter = TestDataGenerator::new(test_seed)
-        .take(10);
+    let test_data_iter = TestDataGenerator::new(test_seed).take(10);
 
     let lines_iter = test_data_iter.clone().map(|test_data| test_data.line);
     let sum = recover_calibration_data(lines_iter);
 
-    let expected_sum = test_data_iter.fold(
-        0,
-        |acc, x| acc + x.calibration_value,
-    );
+    let expected_sum = test_data_iter.fold(0, |acc, x| acc + x.calibration_value);
 
     assert_eq!(sum, expected_sum);
 }

@@ -10,11 +10,11 @@ fn main() {
 }
 
 /// extracts calibration value for each line and computes thier sum
-fn recover_calibration_data<I, S>(lines_iter: I) -> u128 
-where 
-    I: Iterator<Item=S>,
+fn recover_calibration_data<I, S>(lines_iter: I) -> u128
+where
+    I: Iterator<Item = S>,
     S: Borrow<str>,
-    {
+{
     let mut sum: u128 = 0;
     for line in lines_iter {
         let line = line.borrow();
@@ -48,6 +48,7 @@ where
     sum
 }
 
+#[rustfmt::skip]
 #[inline]
 fn slice_to_decimal_digit(s: &str) -> Option<u32> {
     match s.as_bytes() {
@@ -65,7 +66,7 @@ fn slice_to_decimal_digit(s: &str) -> Option<u32> {
     }
 }
 
-
+#[rustfmt::skip]
 const NUM_STR_PAIRS: &[(&str, u8)] = &[
     ("zero", 0), ("0", 0),    
     ("one", 1), ("1", 1),
@@ -79,11 +80,10 @@ const NUM_STR_PAIRS: &[(&str, u8)] = &[
     ("nine", 9), ("9", 9),
 ];
 
-
 // #[cfg(test)]
 // mod tests {
 
 // }
 
- #[cfg(test)]
- mod tests;
+#[cfg(test)]
+mod tests;
