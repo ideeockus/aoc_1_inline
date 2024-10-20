@@ -1,5 +1,20 @@
 use std::borrow::Borrow;
 
+#[rustfmt::skip]
+#[allow(unused)]
+pub const NUM_STR_PAIRS: &[(&str, u8)] = &[
+    ("zero", 0), ("0", 0),    
+    ("one", 1), ("1", 1),
+    ("two", 2), ("2", 2),
+    ("three", 3), ("3", 3),
+    ("four", 4), ("4", 4),
+    ("five", 5), ("5", 5),
+    ("six", 6), ("6", 6),
+    ("seven", 7), ("7", 7),
+    ("eight", 8), ("8", 8),
+    ("nine", 9), ("9", 9),
+];
+
 /// computes sum of extracted calibration values
 pub fn recover_calibration_data<I, S>(lines_iter: I) -> u128
 where
@@ -48,7 +63,7 @@ where
 #[rustfmt::skip]
 #[inline]
 pub fn slice_to_decimal_digit(s: &str) -> Option<u32> {
-    // в целом тут можно было через str::eq_ignore_ascii_case, но так кажется эффективнее + меньше ветвлений
+    // в целом тут можно было через NUM_STR_PAIRS + str::eq_ignore_ascii_case, но так кажется эффективнее + меньше ветвлений
     match s.as_bytes() {
         [b'z' | b'Z', b'e' | b'E', b'r' | b'R', b'o' | b'O', ..]                | [b'0', ..] => Some(0),
         [b'o' | b'O', b'n' | b'N', b'e' | b'E', ..]                             | [b'1', ..] => Some(1),

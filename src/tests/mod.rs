@@ -1,6 +1,6 @@
-use crate::extract_calibration_value;
-use crate::recover_calibration_data;
-use crate::NUM_STR_PAIRS;
+use crate::utils::extract_calibration_value;
+use crate::utils::recover_calibration_data;
+use crate::utils::NUM_STR_PAIRS;
 use rand::prelude::*;
 
 // charset to generate random lowercase ascii strings
