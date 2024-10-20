@@ -1,0 +1,61 @@
+name: Project pipeline
+run-name: Project pipeline
+on: [ push ]
+
+jobs:
+  code-syntax-checking:
+    name: Code syntax checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Rust build & toolchain cache
+        uses: actions/cache@v3
+        with:
+          key: rust-build-cache
+          path: |
+            # build cache
+            ~/.cargo
+            ./target
+            # rustup cache
+            ~/.rustup/toolchains
+            ~/.rustup/update-hashes
+            ~/.rustup/settings.toml
+
+      - name: Install rustup and toolchain
+        run: |
+          curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
+          rustup target add arm-unknown-linux-gnueabihf
+          rustup toolchain install stable-arm-unknown-linux-gnueabihf
+          rustup component add clippy
+
+       # tests, fmt check, clippy
+      - name: Rustfmt checks
+        run: cargo fmt --check
+      - name: Clippy checks
+        run: cargo clippy --release -- --D warnings
+
+  repository-tests:
+    name: Running repository tests
+    runs-on: ubuntu-latest
+    needs: code-syntax-checking
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Rust build & toolchain cache
+        uses: actions/cache@v3
+        with:
+          key: rust-build-cache
+          path: |
+            # build cache
+            ~/.cargo
+            ./target
+            # rustup cache
+            ~/.rustup/toolchains
+            ~/.rustup/update-hashes
+            ~/.rustup/settings.toml
+
+      - name: Tests
+        run: cargo test
